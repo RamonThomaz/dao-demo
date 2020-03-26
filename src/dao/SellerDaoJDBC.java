@@ -9,7 +9,10 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SellerDaoJDBC implements ISellerDao {
 
@@ -53,6 +56,7 @@ public class SellerDaoJDBC implements ISellerDao {
                 Seller seller = setSeller(resultSet, department);
                 return seller;
             }
+            return null;
         }
         catch (SQLException e){
             throw new DbExceptions(e.getMessage());
@@ -61,6 +65,46 @@ public class SellerDaoJDBC implements ISellerDao {
             DB.closeResultSet(resultSet);
             DB.closeStatement(statement);
         }
+    }
+
+    @Override
+    public List<Seller> findByDepartment(Department department) {
+        try {
+            statement = conn.prepareStatement("SELECT seller.*,department.Name as DepName\n" +
+                    "FROM seller INNER JOIN department\n" +
+                    "ON seller.DepartmentId = department.Id\n" +
+                    "WHERE DepartmentId = ?\n" +
+                    "ORDER BY Name");
+
+            statement.setInt(1, department.getId());
+            resultSet = statement.executeQuery();
+
+            List<Seller> sellers = new ArrayList<>();
+            Map<Integer, Department> map = new HashMap<>();
+            while (resultSet.next()) {
+                Department test = map.get(resultSet.getInt("DepartmentId"));
+
+                if(test==null){
+                    test = setDepartment(resultSet);
+                    map.put(test.getId(), test);
+                }
+
+                Seller seller = setSeller(resultSet, test);
+                sellers.add(seller);
+            }
+            return sellers;
+        }
+        catch (SQLException e){
+            throw new DbExceptions(e.getMessage());
+        }
+        finally {
+            DB.closeResultSet(resultSet);
+            DB.closeStatement(statement);
+        }
+    }
+
+    @Override
+    public List<Seller> findAll() {
         return null;
     }
 
@@ -70,10 +114,5 @@ public class SellerDaoJDBC implements ISellerDao {
 
     private Department setDepartment(ResultSet resultSet) throws SQLException {
         return new Department(resultSet.getInt("DepartmentId"), resultSet.getString("DepName"));
-    }
-
-    @Override
-    public List<Seller> findAll() {
-        return null;
     }
 }
