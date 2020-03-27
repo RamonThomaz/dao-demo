@@ -31,5 +31,10 @@ public class Program {
             System.out.println(s);
 
         }
+
+        System.out.println("***Test #4 - insert***");
+        Seller seller1 = new Seller(null, "Greg", "greg@gmail.com", new Date(), 5500.0, department);
+        iSellerDao.insert(seller1);
+        System.out.println("Inserted! ID = " + seller1.getId());
     }
 }
