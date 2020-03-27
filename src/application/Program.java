@@ -24,5 +24,12 @@ public class Program {
             System.out.println(s);
 
         }
+
+        System.out.println("***Test #3 - findAll***");
+        list = iSellerDao.findAll();
+        for (Seller s:list) {
+            System.out.println(s);
+
+        }
     }
 }
