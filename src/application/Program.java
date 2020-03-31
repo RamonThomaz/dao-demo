@@ -29,7 +29,6 @@ public class Program {
         list = iSellerDao.findAll();
         for (Seller s:list) {
             System.out.println(s);
-
         }
 
         /*
@@ -45,5 +44,17 @@ public class Program {
         seller.setName("Ruy");
         iSellerDao.update(seller);
         System.out.println("Updated seller: " + iSellerDao.findById(8));
+
+        System.out.println("***Test #6 - delete***");
+        list = iSellerDao.findAll();
+        for (Seller s:list) {
+            System.out.println(s);
+        }
+        iSellerDao.deleteById(10);
+        list = iSellerDao.findAll();
+        System.out.println("Seller has been deleted:");
+        for (Seller s:list) {
+            System.out.println(s);
+        }
     }
 }
