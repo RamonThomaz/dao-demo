@@ -30,6 +30,15 @@ public class Program2 {
             System.out.println(dp);
         }
         */
-        
+
+        System.out.println("Department to be updated: " + departmentDao.findById(1));
+        department = departmentDao.findById(1);
+        department.setName("TVs");
+        departmentDao.update(department);
+        System.out.println("Updated department: " + departmentDao.findById(1));
+        list = departmentDao.findAll();
+        for (Department dp:list) {
+            System.out.println(dp);
+        }
     }
 }
